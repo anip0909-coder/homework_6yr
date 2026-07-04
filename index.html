@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pintar Cilik 6 Tahun</title>
+    
+    <!-- Meta tag untuk PWA & iOS Support -->
+    <meta name="theme-color" content="#f0fdfa">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Pintar Cilik">
+    
+    <!-- Link Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon / Touch Icon Fallbacks (menggunakan SVG inline berasaskan emoji sebagai ikon ringkas) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🎓</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🎓</text></svg>">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fredoka', 'Nunito', sans-serif;
+            background-color: #f0fdfa;
+            touch-action: manipulation; /* Mengelakkan kesan zoom ketika klik berkali-kali */
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Tema Warna Subjek */
+        .bg-bm { background-color: #fef08a; border-color: #eab308; }
+        .bg-math { background-color: #bfdbfe; border-color: #3b82f6; }
+        .bg-bi { background-color: #fbcfe8; border-color: #ec4899; }
+        .bg-jawi { background-color: #bbf7d0; border-color: #22c55e; }
+
+        .card-shadow { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); }
+        
+        /* Animasi */
+        .btn-bounce { transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-bounce:active { transform: scale(0.95); }
+        
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            80% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .pop-in { animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        .shake-wrong { animation: shake 0.4s ease-in-out; }
+
+        /* Bintang Berjatuhan */
+        .falling-star {
+            position: fixed;
+            top: -10vh;
+            z-index: 50;
+            user-select: none;
+            pointer-events: none;
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
+
+        .jawi-text {
+            font-family: 'Amiri', 'Arial', sans-serif;
+            direction: rtl;
+        }
+        
+        .selected-option {
+            ring-width: 4px;
+            ring-color: #3b82f6;
+            background-color: #eff6ff;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 flex flex-col relative overflow-x-hidden select-none">
+
+    <!-- Audio Effects -->
+    <audio id="audio-clap" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
+    <audio id="audio-wrong" src="https://assets.mixkit.co/active_storage/sfx/3112/3112-preview.mp3" preload="auto"></audio>
+
+    <div id="star-container"></div>
+
+    <!-- PWA Install Banner (Sembunyi secara default) -->
+    <div id="install-banner" class="hidden bg-blue-600 text-white p-4 flex justify-between items-center z-50 sticky top-0 shadow-md">
+        <div class="flex items-center gap-2">
+            <span class="text-2xl">🎓</span>
+            <div>
+                <p class="font-bold text-sm">Pasang Pintar Cilik</p>
+                <p class="text-xs text-blue-100">Main secara offline terus dari skrin utama!</p>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="dismissInstall()" class="text-xs bg-blue-700 px-3 py-2 rounded-lg">Nanti</button>
+            <button onclick="triggerInstall()" class="text-xs bg-yellow-400 text-slate-900 font-bold px-3 py-2 rounded-lg">Pasang</button>
+        </div>
+    </div>
+
+    <!-- Top Navigation -->
+    <nav id="top-nav" class="hidden p-4 flex justify-between items-center bg-white shadow-sm z-20 sticky top-0">
+        <button onclick="goHome()" class="bg-slate-200 hover:bg-slate-300 p-2 rounded-full w-12 h-12 flex items-center justify-center text-2xl btn-bounce">
+            🏠
+        </button>
+        <div class="flex items-center gap-4">
+            <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-bold text-lg border-2 border-blue-300">
+                ⭐ <span id="current-score-display">0</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Progress Bar -->
+    <div id="progress-container" class="hidden w-full h-2 bg-slate-200">
+        <div id="progress-bar" class="h-full bg-green-500 transition-all duration-300" style="width: 0%"></div>
+    </div>
+
+    <main class="flex-1 flex flex-col p-4 w-full max-w-4xl mx-auto relative justify-center">
+
+        <!-- SCREEN: HOME -->
+        <section id="screen-home" class="active flex-1 flex flex-col items-center justify-center py-6">
+            <div class="text-center mb-8">
+                <h1 class="text-5xl font-extrabold text-blue-600 mb-2 drop-shadow-sm">Pintar Cilik</h1>
+                <p class="text-xl text-slate-500 font-semibold">Mari belajar sambil bermain!</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 md:gap-8 w-full max-w-2xl px-2">
+                <button onclick="startSubject('bm')" class="bg-bm card-shadow rounded-3xl p-6 flex flex-col items-center justify-center gap-4 border-2 btn-bounce">
+                    <div class="text-5xl bg-white w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-inner">📖</div>
+                    <h2 class="text-lg md:text-2xl font-bold">Bahasa Melayu</h2>
+                    <div id="badge-bm" class="text-xs md:text-sm font-semibold bg-white/60 px-3 py-1 rounded-full text-slate-700">Markah Tertinggi: 0</div>
+                </button>
+
+                <button onclick="startSubject('math')" class="bg-math card-shadow rounded-3xl p-6 flex flex-col items-center justify-center gap-4 border-2 btn-bounce">
+                    <div class="text-5xl bg-white w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-inner">🔢</div>
+                    <h2 class="text-lg md:text-2xl font-bold">Matematik</h2>
+                    <div id="badge-math" class="text-xs md:text-sm font-semibold bg-white/60 px-3 py-1 rounded-full text-slate-700">Markah Tertinggi: 0</div>
+                </button>
+
+                <button onclick="startSubject('bi')" class="bg-bi card-shadow rounded-3xl p-6 flex flex-col items-center justify-center gap-4 border-2 btn-bounce">
+                    <div class="text-5xl bg-white w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-inner">🔤</div>
+                    <h2 class="text-lg md:text-2xl font-bold">English</h2>
+                    <div id="badge-bi" class="text-xs md:text-sm font-semibold bg-white/60 px-3 py-1 rounded-full text-slate-700">Markah Tertinggi: 0</div>
+                </button>
+
+                <button onclick="startSubject('jawi')" class="bg-jawi card-shadow rounded-3xl p-6 flex flex-col items-center justify-center gap-4 border-2 btn-bounce">
+                    <div class="text-5xl bg-white w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-inner">ي</div>
+                    <h2 class="text-lg md:text-2xl font-bold">Jawi</h2>
+                    <div id="badge-jawi" class="text-xs md:text-sm font-semibold bg-white/60 px-3 py-1 rounded-full text-slate-700">Markah Tertinggi: 0</div>
+                </button>
+            </div>
+        </section>
+
+        <!-- SCREEN: GAMEPLAY -->
+        <section id="screen-game" class="hidden flex-1 flex flex-col items-center py-4 w-full">
+            <div id="question-header" class="text-center mb-4 w-full">
+                <span id="question-counter" class="text-slate-500 font-bold text-lg block mb-1">Soalan 1 / 15</span>
+                <h3 id="question-text" class="text-2xl md:text-3xl font-bold text-slate-700 leading-tight"></h3>
+            </div>
+
+            <!-- Area Imej/Objek Utama -->
+            <div id="question-image" class="text-7xl md:text-8xl mb-6 bg-white p-4 rounded-3xl shadow-sm border-2 border-slate-100 flex items-center justify-center w-40 h-40">
+            </div>
+
+            <!-- Area Jawapan Dinamik (MCQ / Numpad / Build) -->
+            <div id="answer-area" class="w-full max-w-md">
+                <!-- Dijana menggunakan Javascript -->
+            </div>
+
+            <!-- Butang Semak Jawapan -->
+            <div class="mt-6 w-full max-w-md">
+                <button id="btn-semak" onclick="submitAnswer()" class="hidden w-full bg-blue-500 hover:bg-blue-600 text-white font-bold text-2xl py-4 rounded-2xl shadow-lg border-b-4 border-blue-700 btn-bounce transition-all">
+                    Semak
+                </button>
+            </div>
+
+            <!-- Overlay Maklum Balas (Feedback) -->
+            <div id="feedback-overlay" class="hidden absolute inset-0 bg-white/95 z-30 flex flex-col items-center justify-center rounded-2xl backdrop-blur-sm p-4 text-center">
+                <div id="feedback-icon" class="text-8xl mb-4"></div>
+                <h2 id="feedback-text" class="text-4xl font-bold mb-2"></h2>
+                <div id="feedback-correct-answer" class="text-xl md:text-2xl font-semibold text-slate-700 mb-8 mt-2 p-4 bg-slate-100 rounded-xl w-full max-w-sm hidden border-2 border-slate-300">
+                    <!-- Ditunjuk jika salah -->
+                </div>
+                <button id="btn-seterusnya" onclick="nextQuestion()" class="bg-green-500 hover:bg-green-600 text-white font-bold text-2xl py-3 px-10 rounded-2xl shadow-lg border-b-4 border-green-700 btn-bounce">
+                    Seterusnya ➡️
+                </button>
+            </div>
+        </section>
+
+        <!-- SCREEN: RESULT -->
+        <section id="screen-result" class="hidden flex-1 flex flex-col items-center justify-center py-10">
+            <h2 class="text-4xl font-extrabold text-slate-800 mb-6">Tahniah! 🎉</h2>
+            <div class="bg-white p-8 rounded-3xl card-shadow border-4 border-yellow-400 text-center max-w-md w-full mb-8 pop-in">
+                <p class="text-xl text-slate-500 mb-2 font-bold" id="result-subject">Subjek</p>
+                <div class="text-7xl mb-4">🏆</div>
+                <p class="text-2xl font-bold text-slate-600 mb-2">Markah Anda:</p>
+                <p class="text-6xl font-extrabold text-blue-600" id="final-score">0</p>
+            </div>
+            <button onclick="goHome()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold text-2xl py-4 px-12 rounded-full shadow-lg border-b-4 border-blue-700 btn-bounce">
+                Main Lagi
+            </button>
+        </section>
+
+    </main>
+
+    <script>
+        // --- DATA DICTIONARY (15 Items untuk jamin cukup soalan) ---
+        const kamus = [
+            { img: '🐱', bm: 'Kucing', bi: 'Cat', jawi: 'کوچيڠ', bmSuku: ['Ku', 'cing'], biSuku: ['C', 'at'], jawiSuku: ['کو', 'چيڠ'] },
+            { img: '🍎', bm: 'Epal', bi: 'Apple', jawi: 'اڤل', bmSuku: ['E', 'pal'], biSuku: ['Ap', 'ple'], jawiSuku: ['ا', 'ڤل'] },
+            { img: '🚗', bm: 'Kereta', bi: 'Car', jawi: 'کريتا', bmSuku: ['Ke', 're', 'ta'], biSuku: ['C', 'ar'], jawiSuku: ['ک', 'ريتا'] },
+            { img: '🐟', bm: 'Ikan', bi: 'Fish', jawi: 'ايکن', bmSuku: ['I', 'kan'], biSuku: ['F', 'ish'], jawiSuku: ['اي', 'کن'] },
+            { img: '🐘', bm: 'Gajah', bi: 'Elephant', jawi: 'ݢاجه', bmSuku: ['Ga', 'jah'], biSuku: ['Ele', 'phant'], jawiSuku: ['ݢا', 'جه'] },
+            { img: '🐦', bm: 'Burung', bi: 'Bird', jawi: 'بوروڠ', bmSuku: ['Bu', 'rung'], biSuku: ['B', 'ird'], jawiSuku: ['بو', 'روڠ'] },
+            { img: '📖', bm: 'Buku', bi: 'Book', jawi: 'بوکو', bmSuku: ['Bu', 'ku'], biSuku: ['B', 'ook'], jawiSuku: ['بو', 'کو'] },
+            { img: '✏️', bm: 'Pensel', bi: 'Pencil', jawi: 'ڤينسيل', bmSuku: ['Pen', 'sel'], biSuku: ['Pen', 'cil'], jawiSuku: ['ڤين', 'سيل'] },
+            { img: '👕', bm: 'Baju', bi: 'Shirt', jawi: 'باجو', bmSuku: ['Ba', 'ju'], biSuku: ['Sh', 'irt'], jawiSuku: ['با', 'جو'] },
+            { img: '👞', bm: 'Kasut', bi: 'Shoe', jawi: 'کasut', jawi: 'کاسوت', bmSuku: ['Ka', 'sut'], biSuku: ['Sh', 'oe'], jawiSuku: ['کا', 'سوت'] },
+            { img: '🌞', bm: 'Matahari', bi: 'Sun', jawi: 'متهاري', bmSuku: ['Ma', 'ta', 'ha', 'ri'], biSuku: ['S', 'un'], jawiSuku: ['مت', 'هاري'] },
+            { img: '🌙', bm: 'Bulan', bi: 'Moon', jawi: 'بولن', bmSuku: ['Bu', 'lan'], biSuku: ['M', 'oon'], jawiSuku: ['بو', 'لن'] },
+            { img: '☁️', bm: 'Awan', bi: 'Cloud', jawi: 'اون', bmSuku: ['A', 'wan'], biSuku: ['Cl', 'oud'], jawiSuku: ['ا', 'ون'] },
+            { img: '🌲', bm: 'Pokok', bi: 'Tree', jawi: 'ڤوکوق', bmSuku: ['Po', 'kok'], biSuku: ['Tr', 'ee'], jawiSuku: ['ڤو', 'کوق'] },
+            { img: '🌹', bm: 'Bunga', bi: 'Flower', jawi: 'بوڠا', bmSuku: ['Bu', 'nga'], biSuku: ['Flow', 'er'], jawiSuku: ['بو', 'ڠا'] }
+        ];
+
+        // --- STATE VARIABLES ---
+        let currentSubject = '';
+        let currentQuestions = [];
+        let currentQIndex = 0;
+        let score = 0;
+        let totalQuestions = 15;
+        let subjectScores = { bm: 0, math: 0, bi: 0, jawi: 0 };
+        
+        let userSelection = null; 
+        let userBuildArray = [];
+
+        // UI Elements
+        const screenHome = document.getElementById('screen-home');
+        const screenGame = document.getElementById('screen-game');
+        const screenResult = document.getElementById('screen-result');
+        const topNav = document.getElementById('top-nav');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        
+        const qHeader = document.getElementById('question-text');
+        const qCounter = document.getElementById('question-counter');
+        const qImage = document.getElementById('question-image');
+        const answerArea = document.getElementById('answer-area');
+        const btnSemak = document.getElementById('btn-semak');
+        
+        const feedbackOverlay = document.getElementById('feedback-overlay');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const feedbackText = document.getElementById('feedback-text');
+        const feedbackCorrectAnswer = document.getElementById('feedback-correct-answer');
+
+        // --- PWA INSTALLATION SERVICE ---
+        let deferredPrompt;
+        const installBanner = document.getElementById('install-banner');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Halang browser default prompt
+            e.preventDefault();
+            deferredPrompt = e;
+            // Paparkan banner pasang tersuai kita
+            installBanner.classList.remove('hidden');
+        });
+
+        function triggerInstall() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User memasang aplikasi');
+                    }
+                    deferredPrompt = null;
+                    installBanner.classList.add('hidden');
+                });
+            }
+        }
+
+        function dismissInstall() {
+            installBanner.classList.add('hidden');
+        }
+
+        // --- REGISTER SERVICE WORKER ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker didaftarkan!', reg))
+                    .catch(err => console.log('Gagal mendaftar Service Worker', err));
+            });
+        }
+
+        // Ambil markah tertinggi yang disimpan dalam localStorage (jika ada)
+        function loadScores() {
+            const savedScores = localStorage.getItem('pintar_cilik_scores');
+            if (savedScores) {
+                subjectScores = JSON.parse(savedScores);
+            }
+        }
+
+        function saveScoreLocally() {
+            localStorage.setItem('pintar_cilik_scores', JSON.stringify(subjectScores));
+        }
+
+        // --- CORE FUNCTIONS ---
+        function showScreen(screenId) {
+            [screenHome, screenGame, screenResult].forEach(s => s.classList.add('hidden'));
+            document.getElementById(`screen-${screenId}`).classList.remove('hidden');
+            
+            if(screenId === 'home') {
+                topNav.classList.add('hidden');
+                progressContainer.classList.add('hidden');
+                loadScores();
+                document.getElementById('badge-bm').textContent = `Markah Tertinggi: ${subjectScores.bm}`;
+                document.getElementById('badge-math').textContent = `Markah Tertinggi: ${subjectScores.math}`;
+                document.getElementById('badge-bi').textContent = `Markah Tertinggi: ${subjectScores.bi}`;
+                document.getElementById('badge-jawi').textContent = `Markah Tertinggi: ${subjectScores.jawi}`;
+            } else {
+                topNav.classList.remove('hidden');
+                if(screenId === 'game') progressContainer.classList.remove('hidden');
+            }
+        }
+
+        function goHome() {
+            showScreen('home');
+        }
+
+        function playAudio(type) {
+            try {
+                let audio = document.getElementById(type === 'clap' ? 'audio-clap' : 'audio-wrong');
+                audio.currentTime = 0;
+                audio.play();
+            } catch(e) {}
+        }
+
+        function createStarRain() {
+            const container = document.getElementById('star-container');
+            container.innerHTML = ''; 
+            for(let i=0; i<30; i++) {
+                let star = document.createElement('div');
+                star.innerHTML = '⭐';
+                star.className = 'falling-star';
+                star.style.left = `${Math.random() * 100}vw`;
+                star.style.animationDuration = `${Math.random() * 1.5 + 1}s`;
+                star.style.fontSize = `${Math.random() * 1.5 + 1}rem`;
+                container.appendChild(star);
+            }
+            setTimeout(() => { container.innerHTML = ''; }, 3000);
+        }
+
+        // --- QUESTION GENERATORS ---
+        function shuffleArray(array) {
+            let curId = array.length;
+            while (0 !== curId) {
+                let randId = Math.floor(Math.random() * curId);
+                curId -= 1;
+                let tmp = array[curId];
+                array[curId] = array[randId];
+                array[randId] = tmp;
+            }
+            return array;
+        }
+
+        function generateLanguageQuestions(langCode) {
+            let qs = [];
+            let items = shuffleArray([...kamus]);
+            
+            // 5 Soalan: Padankan Perkataan (MCQ)
+            for(let i=0; i<5; i++) {
+                let item = items[i];
+                let options = [item[langCode]];
+                while(options.length < 3) {
+                    let randItem = kamus[Math.floor(Math.random() * kamus.length)];
+                    if(!options.includes(randItem[langCode])) options.push(randItem[langCode]);
+                }
+                qs.push({
+                    type: 'mcq',
+                    q: "Padankan gambar dengan perkataan:",
+                    img: item.img,
+                    options: shuffleArray(options),
+                    ans: item[langCode],
+                    isJawi: langCode === 'jawi'
+                });
+            }
+
+            // 5 Soalan: Bina Perkataan (Suku Kata)
+            for(let i=5; i<10; i++) {
+                let item = items[i];
+                let parts = item[`${langCode}Suku`];
+                let options = [...parts];
+                let distractor = kamus[Math.floor(Math.random() * kamus.length)][`${langCode}Suku`][0];
+                options.push(distractor);
+                
+                qs.push({
+                    type: 'build',
+                    q: "Susun suku kata:",
+                    img: item.img,
+                    partsCount: parts.length,
+                    options: shuffleArray(options),
+                    ans: item[langCode],
+                    isJawi: langCode === 'jawi'
+                });
+            }
+
+            // 5 Soalan: Eja / Isi tempat kosong
+            for(let i=10; i<15; i++) {
+                let item = items[i];
+                let word = item[langCode];
+                let blanked, missingChar;
+                
+                if(word.length > 2) {
+                    let r = Math.floor(Math.random() * word.length);
+                    missingChar = word[r];
+                    blanked = word.substring(0, r) + '_' + word.substring(r + 1);
+                } else {
+                    blanked = word; missingChar = word;
+                }
+
+                let options = [missingChar];
+                let chars = langCode === 'jawi' ? 'ابتدسشصضطظعغفقكلمنهوي' : 'abcdefghijklmnopqrstuvwxyz';
+                while(options.length < 3) {
+                    let rc = chars[Math.floor(Math.random() * chars.length)];
+                    if(!options.includes(rc)) options.push(rc);
+                }
+
+                qs.push({
+                    type: 'mcq',
+                    q: `Lengkapkan perkataan: ${blanked}`,
+                    img: item.img,
+                    options: shuffleArray(options),
+                    ans: missingChar,
+                    ansFullText: word,
+                    isJawi: langCode === 'jawi'
+                });
+            }
+            return qs;
+        }
+
+        function generateMathQuestions() {
+            let qs = [];
+            
+            // 5 Soalan Tambah/Tolak (MCQ)
+            for(let i=0; i<5; i++) {
+                let isAdd = Math.random() > 0.5;
+                let a, b, ans;
+                if(isAdd) {
+                    a = Math.floor(Math.random() * 10) + 1;
+                    b = Math.floor(Math.random() * 10) + 1;
+                    ans = a + b;
+                } else {
+                    a = Math.floor(Math.random() * 10) + 5;
+                    b = Math.floor(Math.random() * a);
+                    ans = a - b;
+                }
+                let options = [ans, ans+1, Math.max(0, ans-1)];
+                qs.push({
+                    type: 'mcq',
+                    q: "Pilih jawapan yang betul:",
+                    img: `${a} ${isAdd ? '+' : '-'} ${b} = ?`,
+                    isTextImg: true,
+                    options: shuffleArray([...new Set(options)]),
+                    ans: ans.toString()
+                });
+            }
+
+            // 5 Soalan Tambah/Tolak (Input Num)
+            for(let i=0; i<5; i++) {
+                let isAdd = Math.random() > 0.5;
+                let a = Math.floor(Math.random() * 10) + 1;
+                let b = Math.floor(Math.random() * 9) + 1;
+                if(!isAdd && a < b) { let temp = a; a = b; b = temp; }
+                let ans = isAdd ? a + b : a - b;
+                qs.push({
+                    type: 'input',
+                    q: "Kira dan masukkan nombor:",
+                    img: `${a} ${isAdd ? '+' : '-'} ${b} = ?`,
+                    isTextImg: true,
+                    ans: ans.toString()
+                });
+            }
+
+            // 5 Soalan Padan Duit (MCQ)
+            const money = [
+                { val: 'RM 1', img: '💵 Biru (RM 1)' },
+                { val: 'RM 5', img: '💶 Hijau (RM 5)' },
+                { val: 'RM 10', img: '💷 Merah (RM 10)' }
+            ];
+            for(let i=0; i<5; i++) {
+                let m = money[Math.floor(Math.random() * money.length)];
+                qs.push({
+                    type: 'mcq',
+                    q: "Berapakah nilai wang ini?",
+                    img: m.img,
+                    isTextImg: true,
+                    options: ['RM 1', 'RM 5', 'RM 10'],
+                    ans: m.val
+                });
+            }
+            return qs;
+        }
+
+        // --- GAME LOGIC ---
+        function startSubject(sub) {
+            currentSubject = sub;
+            score = 0;
+            currentQIndex = 0;
+            document.getElementById('current-score-display').textContent = score;
+            
+            if(sub === 'bm') currentQuestions = generateLanguageQuestions('bm');
+            else if(sub === 'bi') currentQuestions = generateLanguageQuestions('bi');
+            else if(sub === 'jawi') currentQuestions = generateLanguageQuestions('jawi');
+            else if(sub === 'math') currentQuestions = generateMathQuestions();
+            
+            showScreen('game');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            userSelection = null;
+            userBuildArray = [];
+            btnSemak.classList.add('hidden');
+            feedbackOverlay.classList.add('hidden');
+            feedbackCorrectAnswer.classList.add('hidden');
+            
+            let q = currentQuestions[currentQIndex];
+            
+            let progress = (currentQIndex / totalQuestions) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            qCounter.textContent = `Soalan ${currentQIndex + 1} / ${totalQuestions}`;
+            qHeader.textContent = q.q;
+            
+            if(q.isTextImg) {
+                qImage.innerHTML = `<span class="text-4xl md:text-5xl font-bold text-blue-600">${q.img}</span>`;
+            } else {
+                qImage.innerHTML = q.img;
+            }
+
+            answerArea.innerHTML = '';
+
+            if(q.type === 'mcq') {
+                renderMCQ(q);
+            } else if (q.type === 'input') {
+                renderInput(q);
+            } else if (q.type === 'build') {
+                renderBuild(q);
+            }
+        }
+
+        // --- UI RENDERING ---
+        function renderMCQ(q) {
+            let grid = document.createElement('div');
+            grid.className = 'grid grid-cols-1 md:grid-cols-3 gap-3';
+            
+            q.options.forEach((opt, idx) => {
+                let btn = document.createElement('button');
+                btn.className = `bg-white border-2 border-slate-200 rounded-2xl p-4 text-xl md:text-2xl font-bold text-slate-700 shadow-sm transition-all btn-bounce ${q.isJawi ? 'jawi-text text-3xl' : ''}`;
+                btn.textContent = opt;
+                btn.onclick = () => {
+                    Array.from(grid.children).forEach(c => {
+                        c.classList.remove('selected-option');
+                    });
+                    btn.classList.add('selected-option');
+                    userSelection = opt.toString();
+                    btnSemak.classList.remove('hidden');
+                };
+                grid.appendChild(btn);
+            });
+            answerArea.appendChild(grid);
+        }
+
+        function renderInput(q) {
+            let display = document.createElement('div');
+            display.id = 'num-display';
+            display.className = 'w-full bg-white border-4 border-blue-200 rounded-2xl p-4 text-4xl font-bold text-center text-blue-600 shadow-inner mb-4 h-20 flex items-center justify-center';
+            display.textContent = '?';
+            answerArea.appendChild(display);
+
+            let grid = document.createElement('div');
+            grid.className = 'grid grid-cols-3 gap-2';
+            
+            const keys = ['1','2','3','4','5','6','7','8','9','Padam','0'];
+            keys.forEach(k => {
+                let btn = document.createElement('button');
+                btn.className = 'bg-white border-2 border-slate-200 rounded-2xl p-3 text-xl font-bold text-slate-700 shadow-sm btn-bounce';
+                if(k === 'Padam') {
+                    btn.className += ' text-red-500 text-sm';
+                    btn.textContent = 'Padam';
+                } else {
+                    btn.textContent = k;
+                }
+
+                btn.onclick = () => {
+                    if(k === 'Padam') {
+                        userSelection = null;
+                        display.textContent = '?';
+                        display.classList.remove('selected-option');
+                        btnSemak.classList.add('hidden');
+                    } else {
+                        userSelection = (userSelection || '') === '?' || userSelection === null ? k : userSelection + k;
+                        if(userSelection.length > 2) userSelection = userSelection.slice(-2);
+                        display.textContent = userSelection;
+                        display.classList.add('selected-option');
+                        btnSemak.classList.remove('hidden');
+                    }
+                };
+                grid.appendChild(btn);
+            });
+            answerArea.appendChild(grid);
+        }
+
+        function renderBuild(q) {
+            let displayArea = document.createElement('div');
+            displayArea.className = 'flex justify-center gap-2 mb-6 min-h-[60px]';
+            displayArea.id = 'build-display';
+            
+            for(let i=0; i<q.partsCount; i++) {
+                let slot = document.createElement('div');
+                slot.className = 'w-14 h-14 md:w-16 md:h-16 border-4 border-dashed border-slate-300 rounded-xl flex items-center justify-center text-xl md:text-2xl font-bold text-blue-600 bg-white/50 cursor-pointer';
+                if(q.isJawi) slot.classList.add('jawi-text');
+                
+                slot.onclick = () => {
+                    if(slot.textContent !== '') {
+                        let val = slot.textContent;
+                        slot.textContent = '';
+                        slot.classList.remove('border-solid', 'border-blue-400', 'bg-blue-50');
+                        slot.classList.add('border-dashed', 'border-slate-300');
+                        userBuildArray = userBuildArray.filter(v => v !== val);
+                        let origBtn = document.getElementById(`opt-btn-${val}`);
+                        if(origBtn) origBtn.classList.remove('opacity-30', 'pointer-events-none');
+                        
+                        updateBuildSelection();
+                    }
+                };
+                displayArea.appendChild(slot);
+            }
+            answerArea.appendChild(displayArea);
+
+            let optGrid = document.createElement('div');
+            optGrid.className = 'flex flex-wrap justify-center gap-2';
+            
+            q.options.forEach((opt, idx) => {
+                let btn = document.createElement('button');
+                btn.id = `opt-btn-${opt}`;
+                btn.className = `bg-white border-2 border-slate-200 rounded-2xl p-3 text-lg md:text-xl font-bold text-slate-700 shadow-sm transition-all btn-bounce ${q.isJawi ? 'jawi-text text-3xl' : ''}`;
+                btn.textContent = opt;
+                
+                btn.onclick = () => {
+                    let slots = Array.from(displayArea.children);
+                    let emptySlot = slots.find(s => s.textContent === '');
+                    
+                    if(emptySlot) {
+                        emptySlot.textContent = opt;
+                        emptySlot.classList.remove('border-dashed', 'border-slate-300');
+                        emptySlot.classList.add('border-solid', 'border-blue-400', 'bg-blue-50');
+                        
+                        userBuildArray.push(opt);
+                        btn.classList.add('opacity-30', 'pointer-events-none');
+                        
+                        updateBuildSelection();
+                    }
+                };
+                optGrid.appendChild(btn);
+            });
+            answerArea.appendChild(optGrid);
+
+            function updateBuildSelection() {
+                if(userBuildArray.length === q.partsCount) {
+                    userSelection = userBuildArray.join('');
+                    btnSemak.classList.remove('hidden');
+                } else {
+                    userSelection = null;
+                    btnSemak.classList.add('hidden');
+                }
+            }
+        }
+
+        // --- EVALUATION ---
+        function submitAnswer() {
+            if(!userSelection) return;
+            
+            let q = currentQuestions[currentQIndex];
+            let isCorrect = false;
+
+            if(q.type === 'mcq' || q.type === 'input') {
+                isCorrect = (userSelection.toString().trim().toLowerCase() === q.ans.toString().trim().toLowerCase());
+            } else if (q.type === 'build') {
+                isCorrect = (userSelection.toString().trim() === q.ans.toString().trim());
+            }
+
+            showFeedback(isCorrect, q.ansFullText || q.ans, q.isJawi);
+        }
+
+        function showFeedback(isCorrect, correctAnswerText, isJawi) {
+            btnSemak.classList.add('hidden');
+            feedbackOverlay.classList.remove('hidden');
+            
+            if(isCorrect) {
+                score += 10;
+                document.getElementById('current-score-display').textContent = score;
+                
+                feedbackIcon.textContent = '🌟';
+                feedbackText.textContent = 'Pandai!';
+                feedbackText.className = 'text-5xl font-bold text-green-500 pop-in mb-6';
+                feedbackOverlay.className = 'absolute inset-0 bg-white/95 z-30 flex flex-col items-center justify-center rounded-2xl backdrop-blur-sm p-4 text-center';
+                feedbackCorrectAnswer.classList.add('hidden');
+                
+                playAudio('clap');
+                createStarRain();
+            } else {
+                feedbackIcon.textContent = '❌';
+                feedbackText.textContent = 'Cuba Lagi';
+                feedbackText.className = 'text-4xl font-bold text-red-500 mb-2';
+                feedbackOverlay.className = 'absolute inset-0 bg-red-50/95 z-30 flex flex-col items-center justify-center rounded-2xl backdrop-blur-sm p-4 text-center shake-wrong';
+                
+                feedbackCorrectAnswer.classList.remove('hidden');
+                feedbackCorrectAnswer.innerHTML = `Jawapan Sebenar:<br><span class="text-3xl font-bold text-blue-600 block mt-2 ${isJawi ? 'jawi-text text-5xl' : ''}">${correctAnswerText}</span>`;
+                
+                playAudio('wrong');
+            }
+        }
+
+        function nextQuestion() {
+            currentQIndex++;
+            if(currentQIndex < totalQuestions) {
+                renderQuestion();
+            } else {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            progressBar.style.width = '100%';
+            
+            const names = { 'bm': 'Bahasa Melayu', 'bi': 'English', 'math': 'Matematik', 'jawi': 'Jawi' };
+            
+            if(score > subjectScores[currentSubject]) {
+                subjectScores[currentSubject] = score;
+                saveScoreLocally(); // simpan ke peranti
+            }
+            
+            document.getElementById('result-subject').textContent = names[currentSubject];
+            document.getElementById('final-score').textContent = score;
+            
+            showScreen('result');
+            createStarRain();
+            playAudio('clap');
+        }
+
+        window.onload = function() {
+            showScreen('home');
+        }
+
+    </script>
+</body>
+</html>
