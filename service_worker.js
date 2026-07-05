@@ -2,6 +2,7 @@ const CACHE_NAME = 'pintar-cilik-v1';
 const ASSETS = [
   'index.html',
   'manifest.json',
+  'image_35eaa8.png',
   'https://cdn.tailwindcss.com',
   'https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;700&display=swap'
 ];
