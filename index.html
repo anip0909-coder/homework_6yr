@@ -5,30 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pintar Cilik 6 Tahun</title>
     
-    <!-- Meta tag untuk PWA & iOS Support -->
     <meta name="theme-color" content="#f0fdfa">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Pintar Cilik">
     
-    <!-- Link Manifest -->
     <link rel="manifest" href="manifest.json">
     
-    <!-- Favicon / Touch Icon Fallbacks (menggunakan SVG inline berasaskan emoji sebagai ikon ringkas) -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🎓</text></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🎓</text></svg>">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
         body {
             font-family: 'Fredoka', 'Nunito', sans-serif;
             background-color: #f0fdfa;
-            touch-action: manipulation; /* Mengelakkan kesan zoom ketika klik berkali-kali */
+            touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
         }
         
-        /* Tema Warna Subjek */
         .bg-bm { background-color: #fef08a; border-color: #eab308; }
         .bg-math { background-color: #bfdbfe; border-color: #3b82f6; }
         .bg-bi { background-color: #fbcfe8; border-color: #ec4899; }
@@ -36,7 +33,6 @@
 
         .card-shadow { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); }
         
-        /* Animasi */
         .btn-bounce { transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1); }
         .btn-bounce:active { transform: scale(0.95); }
         
@@ -54,7 +50,6 @@
         }
         .shake-wrong { animation: shake 0.4s ease-in-out; }
 
-        /* Bintang Berjatuhan */
         .falling-star {
             position: fixed;
             top: -10vh;
@@ -78,17 +73,27 @@
             background-color: #eff6ff;
             transform: scale(1.05);
         }
+
+        /* Gaya untuk skrin pengenalan (Splash Screen) */
+        #screen-splash {
+            background-color: #ffdf00; /* Warna kuning sepadan dengan imej */
+            background-image: url('image_35eaa8.png');
+            background-size: contain; /* Memastikan keseluruhan imej kelihatan */
+            background-position: center 15%;
+            background-repeat: no-repeat;
+        }
+        .splash-overlay {
+            background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(240,253,250,0.8) 60%, rgba(240,253,250,1) 100%);
+        }
     </style>
 </head>
 <body class="h-[100dvh] text-slate-800 flex flex-col relative overflow-hidden select-none">
 
-    <!-- Audio Effects -->
     <audio id="audio-clap" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
     <audio id="audio-wrong" src="https://assets.mixkit.co/active_storage/sfx/3112/3112-preview.mp3" preload="auto"></audio>
 
     <div id="star-container"></div>
 
-    <!-- PWA Install Banner (Sembunyi secara default) -->
     <div id="install-banner" class="hidden bg-blue-600 text-white p-4 flex justify-between items-center z-50 sticky top-0 shadow-md">
         <div class="flex items-center gap-2">
             <span class="text-2xl">🎓</span>
@@ -103,7 +108,6 @@
         </div>
     </div>
 
-    <!-- Top Navigation -->
     <nav id="top-nav" class="hidden p-4 flex justify-between items-center bg-white shadow-sm z-20 sticky top-0">
         <button onclick="goHome()" class="bg-slate-200 hover:bg-slate-300 p-2 rounded-full w-12 h-12 flex items-center justify-center text-2xl btn-bounce">
             🏠
@@ -115,71 +119,74 @@
         </div>
     </nav>
 
-    <!-- Progress Bar -->
     <div id="progress-container" class="hidden w-full h-2 bg-slate-200 shrink-0">
         <div id="progress-bar" class="h-full bg-green-500 transition-all duration-300" style="width: 0%"></div>
     </div>
 
-    <main class="flex-1 overflow-y-auto flex flex-col p-3 md:p-4 w-full max-w-4xl mx-auto relative justify-center">
+    <main class="flex-1 overflow-y-auto flex flex-col relative w-full h-full">
 
-        <!-- SCREEN: HOME -->
-        <section id="screen-home" class="active flex-1 flex flex-col items-center justify-center py-4 md:py-6">
-            <div class="text-center mb-6 md:mb-8">
+        <section id="screen-splash" class="active absolute inset-0 z-40 flex flex-col items-center justify-end pb-12 md:pb-20">
+            <div class="splash-overlay absolute inset-0 z-0"></div>
+            <div class="z-10 flex flex-col items-center pop-in px-6 text-center w-full max-w-md mx-auto mb-4 md:mb-8">
+                <button onclick="enterApp()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-2xl md:text-3xl py-5 rounded-[2rem] shadow-2xl border-b-8 border-blue-800 btn-bounce animate-pulse">
+                    MULA BERMAIN 🚀
+                </button>
+                <p class="mt-4 text-slate-600 font-bold text-sm bg-white/50 px-4 py-1 rounded-full">Pendidikan Awal Kanak-Kanak 6 Tahun</p>
+            </div>
+        </section>
+
+        <section id="screen-home" class="hidden flex-1 flex-col items-center justify-center py-4 md:py-6 p-3 md:p-4 w-full max-w-4xl mx-auto">
+            <div class="text-center mb-6 md:mb-8 mt-4">
                 <h1 class="text-4xl md:text-5xl font-extrabold text-blue-600 mb-1 md:mb-2 drop-shadow-sm">Pintar Cilik</h1>
-                <p class="text-lg md:text-xl text-slate-500 font-semibold">Mari belajar sambil bermain!</p>
+                <p class="text-lg md:text-xl text-slate-500 font-semibold">Pilih subjek untuk mula bermain!</p>
             </div>
 
-            <div class="grid grid-cols-2 gap-3 md:gap-8 w-full max-w-2xl px-1 md:px-2">
-                <button onclick="startSubject('bm')" class="bg-bm card-shadow rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-4 border-2 btn-bounce">
+            <div class="grid grid-cols-2 gap-3 md:gap-8 w-full max-w-2xl px-1 md:px-2 mx-auto">
+                <button onclick="startSubject('bm')" class="bg-bm card-shadow rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-4 border-2 btn-bounce h-32 md:h-48">
                     <div class="text-4xl md:text-5xl bg-white w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-inner">📖</div>
                     <h2 class="text-base md:text-2xl font-bold">Bahasa Melayu</h2>
-                    <div id="badge-bm" class="text-[10px] md:text-sm font-semibold bg-white/60 px-2 py-1 md:px-3 rounded-full text-slate-700">Markah Tertinggi: 0</div>
+                    <div id="badge-bm" class="text-[10px] md:text-sm font-semibold bg-white/60 px-2 py-1 md:px-3 rounded-full text-slate-700 w-full truncate">Markah: 0</div>
                 </button>
 
-                <button onclick="startSubject('math')" class="bg-math card-shadow rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-4 border-2 btn-bounce">
+                <button onclick="startSubject('math')" class="bg-math card-shadow rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-4 border-2 btn-bounce h-32 md:h-48">
                     <div class="text-4xl md:text-5xl bg-white w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-inner">🔢</div>
                     <h2 class="text-base md:text-2xl font-bold">Matematik</h2>
-                    <div id="badge-math" class="text-[10px] md:text-sm font-semibold bg-white/60 px-2 py-1 md:px-3 rounded-full text-slate-700">Markah Tertinggi: 0</div>
+                    <div id="badge-math" class="text-[10px] md:text-sm font-semibold bg-white/60 px-2 py-1 md:px-3 rounded-full text-slate-700 w-full truncate">Markah: 0</div>
                 </button>
 
-                <button onclick="startSubject('bi')" class="bg-bi card-shadow rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-4 border-2 btn-bounce">
+                <button onclick="startSubject('bi')" class="bg-bi card-shadow rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-4 border-2 btn-bounce h-32 md:h-48">
                     <div class="text-4xl md:text-5xl bg-white w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-inner">🔤</div>
                     <h2 class="text-base md:text-2xl font-bold">English</h2>
-                    <div id="badge-bi" class="text-[10px] md:text-sm font-semibold bg-white/60 px-2 py-1 md:px-3 rounded-full text-slate-700">Markah Tertinggi: 0</div>
+                    <div id="badge-bi" class="text-[10px] md:text-sm font-semibold bg-white/60 px-2 py-1 md:px-3 rounded-full text-slate-700 w-full truncate">Markah: 0</div>
                 </button>
 
-                <button onclick="startSubject('jawi')" class="bg-jawi card-shadow rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-4 border-2 btn-bounce">
+                <button onclick="startSubject('jawi')" class="bg-jawi card-shadow rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-4 border-2 btn-bounce h-32 md:h-48">
                     <div class="text-4xl md:text-5xl bg-white w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-inner">ي</div>
                     <h2 class="text-base md:text-2xl font-bold">Jawi</h2>
-                    <div id="badge-jawi" class="text-[10px] md:text-sm font-semibold bg-white/60 px-2 py-1 md:px-3 rounded-full text-slate-700">Markah Tertinggi: 0</div>
+                    <div id="badge-jawi" class="text-[10px] md:text-sm font-semibold bg-white/60 px-2 py-1 md:px-3 rounded-full text-slate-700 w-full truncate">Markah: 0</div>
                 </button>
             </div>
         </section>
 
-        <!-- SCREEN: GAMEPLAY -->
-        <section id="screen-game" class="hidden flex-1 flex flex-col items-center justify-center py-2 w-full min-h-[400px]">
-            <div id="question-header" class="text-center mb-2 md:mb-4 w-full shrink-0">
+        <section id="screen-game" class="hidden flex-1 flex-col items-center justify-center py-2 w-full min-h-[400px] p-3 md:p-4 max-w-4xl mx-auto">
+            <div id="question-header" class="text-center mb-2 md:mb-4 w-full shrink-0 mt-2">
                 <span id="question-counter" class="text-slate-500 font-bold text-sm md:text-lg block mb-1">Soalan 1 / 15</span>
                 <h3 id="question-text" class="text-xl md:text-3xl font-bold text-slate-700 leading-tight"></h3>
             </div>
 
-            <!-- Area Imej/Objek Utama -->
-            <div id="question-image" class="text-6xl md:text-8xl mb-3 md:mb-6 bg-white p-2 md:p-4 rounded-2xl md:rounded-3xl shadow-sm border-2 border-slate-100 flex items-center justify-center w-28 h-28 md:w-40 md:h-40 shrink-0">
+            <div id="question-image" class="text-6xl md:text-8xl mb-3 md:mb-6 bg-white p-2 md:p-4 rounded-2xl md:rounded-3xl shadow-sm border-2 border-slate-100 flex items-center justify-center w-28 h-28 md:w-40 md:h-40 shrink-0 mx-auto">
             </div>
 
-            <!-- Area Jawapan Dinamik (MCQ / Numpad / Build) -->
-            <div id="answer-area" class="w-full max-w-md flex-1 flex flex-col justify-center">
+            <div id="answer-area" class="w-full max-w-md flex-1 flex flex-col justify-center mx-auto">
                 <!-- Dijana menggunakan Javascript -->
             </div>
 
-            <!-- Butang Semak Jawapan -->
-            <div class="mt-4 w-full max-w-md shrink-0 pb-4">
+            <div class="mt-4 w-full max-w-md shrink-0 pb-4 mx-auto">
                 <button id="btn-semak" onclick="submitAnswer()" class="hidden w-full bg-blue-500 hover:bg-blue-600 text-white font-bold text-xl md:text-2xl py-3 md:py-4 rounded-2xl shadow-lg border-b-4 border-blue-700 btn-bounce transition-all">
                     Semak
                 </button>
             </div>
 
-            <!-- Overlay Maklum Balas (Feedback) -->
             <div id="feedback-overlay" class="hidden fixed inset-0 bg-white/95 z-50 flex flex-col items-center justify-center p-4 text-center">
                 <div id="feedback-icon" class="text-7xl md:text-8xl mb-2 md:mb-4"></div>
                 <h2 id="feedback-text" class="text-3xl md:text-4xl font-bold mb-2"></h2>
@@ -192,16 +199,15 @@
             </div>
         </section>
 
-        <!-- SCREEN: RESULT -->
-        <section id="screen-result" class="hidden flex-1 flex flex-col items-center justify-center py-6 md:py-10">
-            <h2 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4 md:mb-6">Tahniah! 🎉</h2>
-            <div class="bg-white p-6 md:p-8 rounded-3xl card-shadow border-4 border-yellow-400 text-center max-w-xs md:max-w-md w-full mb-6 md:mb-8 pop-in">
+        <section id="screen-result" class="hidden flex-1 flex-col items-center justify-center py-6 md:py-10 p-3 md:p-4 max-w-4xl mx-auto w-full">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4 md:mb-6 mt-8">Tahniah! 🎉</h2>
+            <div class="bg-white p-6 md:p-8 rounded-3xl card-shadow border-4 border-yellow-400 text-center max-w-xs md:max-w-md w-full mb-6 md:mb-8 pop-in mx-auto">
                 <p class="text-lg md:text-xl text-slate-500 mb-2 font-bold" id="result-subject">Subjek</p>
                 <div class="text-6xl md:text-7xl mb-4">🏆</div>
                 <p class="text-xl md:text-2xl font-bold text-slate-600 mb-2">Markah Anda:</p>
                 <p class="text-5xl md:text-6xl font-extrabold text-blue-600" id="final-score">0</p>
             </div>
-            <button onclick="goHome()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold text-xl md:text-2xl py-3 md:py-4 px-10 md:px-12 rounded-full shadow-lg border-b-4 border-blue-700 btn-bounce">
+            <button onclick="goHome()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold text-xl md:text-2xl py-3 md:py-4 px-10 md:px-12 rounded-full shadow-lg border-b-4 border-blue-700 btn-bounce mx-auto block">
                 Main Lagi
             </button>
         </section>
@@ -209,7 +215,6 @@
     </main>
 
     <script>
-        // --- DATA DICTIONARY (15 Items untuk jamin cukup soalan) ---
         const kamus = [
             { img: '🐱', bm: 'Kucing', bi: 'Cat', jawi: 'کوچيڠ', bmSuku: ['Ku', 'cing'], biSuku: ['C', 'at'], jawiSuku: ['کو', 'چيڠ'] },
             { img: '🍎', bm: 'Epal', bi: 'Apple', jawi: 'اڤل', bmSuku: ['E', 'pal'], biSuku: ['Ap', 'ple'], jawiSuku: ['ا', 'ڤل'] },
@@ -220,7 +225,7 @@
             { img: '📖', bm: 'Buku', bi: 'Book', jawi: 'بوکو', bmSuku: ['Bu', 'ku'], biSuku: ['B', 'ook'], jawiSuku: ['بو', 'کو'] },
             { img: '✏️', bm: 'Pensel', bi: 'Pencil', jawi: 'ڤينسيل', bmSuku: ['Pen', 'sel'], biSuku: ['Pen', 'cil'], jawiSuku: ['ڤين', 'سيل'] },
             { img: '👕', bm: 'Baju', bi: 'Shirt', jawi: 'باجو', bmSuku: ['Ba', 'ju'], biSuku: ['Sh', 'irt'], jawiSuku: ['با', 'جو'] },
-            { img: '👞', bm: 'Kasut', bi: 'Shoe', jawi: 'کasut', jawi: 'کاسوت', bmSuku: ['Ka', 'sut'], biSuku: ['Sh', 'oe'], jawiSuku: ['کا', 'سوت'] },
+            { img: '👞', bm: 'Kasut', bi: 'Shoe', jawi: 'کاسوت', bmSuku: ['Ka', 'sut'], biSuku: ['Sh', 'oe'], jawiSuku: ['کا', 'سوت'] },
             { img: '🌞', bm: 'Matahari', bi: 'Sun', jawi: 'متهاري', bmSuku: ['Ma', 'ta', 'ha', 'ri'], biSuku: ['S', 'un'], jawiSuku: ['مت', 'هاري'] },
             { img: '🌙', bm: 'Bulan', bi: 'Moon', jawi: 'بولن', bmSuku: ['Bu', 'lan'], biSuku: ['M', 'oon'], jawiSuku: ['بو', 'لن'] },
             { img: '☁️', bm: 'Awan', bi: 'Cloud', jawi: 'اون', bmSuku: ['A', 'wan'], biSuku: ['Cl', 'oud'], jawiSuku: ['ا', 'ون'] },
@@ -228,7 +233,6 @@
             { img: '🌹', bm: 'Bunga', bi: 'Flower', jawi: 'بوڠا', bmSuku: ['Bu', 'nga'], biSuku: ['Flow', 'er'], jawiSuku: ['بو', 'ڠا'] }
         ];
 
-        // --- STATE VARIABLES ---
         let currentSubject = '';
         let currentQuestions = [];
         let currentQIndex = 0;
@@ -239,7 +243,7 @@
         let userSelection = null; 
         let userBuildArray = [];
 
-        // UI Elements
+        const screenSplash = document.getElementById('screen-splash');
         const screenHome = document.getElementById('screen-home');
         const screenGame = document.getElementById('screen-game');
         const screenResult = document.getElementById('screen-result');
@@ -258,15 +262,12 @@
         const feedbackText = document.getElementById('feedback-text');
         const feedbackCorrectAnswer = document.getElementById('feedback-correct-answer');
 
-        // --- PWA INSTALLATION SERVICE ---
         let deferredPrompt;
         const installBanner = document.getElementById('install-banner');
 
         window.addEventListener('beforeinstallprompt', (e) => {
-            // Halang browser default prompt
             e.preventDefault();
             deferredPrompt = e;
-            // Paparkan banner pasang tersuai kita
             installBanner.classList.remove('hidden');
         });
 
@@ -287,7 +288,6 @@
             installBanner.classList.add('hidden');
         }
 
-        // --- REGISTER SERVICE WORKER ---
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
@@ -296,7 +296,6 @@
             });
         }
 
-        // Ambil markah tertinggi yang disimpan dalam localStorage (jika ada)
         function loadScores() {
             const savedScores = localStorage.getItem('pintar_cilik_scores');
             if (savedScores) {
@@ -308,23 +307,39 @@
             localStorage.setItem('pintar_cilik_scores', JSON.stringify(subjectScores));
         }
 
-        // --- CORE FUNCTIONS ---
         function showScreen(screenId) {
-            [screenHome, screenGame, screenResult].forEach(s => s.classList.add('hidden'));
-            document.getElementById(`screen-${screenId}`).classList.remove('hidden');
+            [screenSplash, screenHome, screenGame, screenResult].forEach(s => {
+                s.classList.add('hidden');
+                s.classList.remove('flex');
+            });
             
-            if(screenId === 'home') {
+            const targetScreen = document.getElementById(`screen-${screenId}`);
+            targetScreen.classList.remove('hidden');
+            if(screenId !== 'splash') {
+                 targetScreen.classList.add('flex');
+            }
+            
+            if(screenId === 'splash') {
+                topNav.classList.add('hidden');
+                progressContainer.classList.add('hidden');
+            } else if(screenId === 'home') {
                 topNav.classList.add('hidden');
                 progressContainer.classList.add('hidden');
                 loadScores();
-                document.getElementById('badge-bm').textContent = `Markah Tertinggi: ${subjectScores.bm}`;
-                document.getElementById('badge-math').textContent = `Markah Tertinggi: ${subjectScores.math}`;
-                document.getElementById('badge-bi').textContent = `Markah Tertinggi: ${subjectScores.bi}`;
-                document.getElementById('badge-jawi').textContent = `Markah Tertinggi: ${subjectScores.jawi}`;
+                document.getElementById('badge-bm').textContent = `Tertinggi: ${subjectScores.bm}`;
+                document.getElementById('badge-math').textContent = `Tertinggi: ${subjectScores.math}`;
+                document.getElementById('badge-bi').textContent = `Tertinggi: ${subjectScores.bi}`;
+                document.getElementById('badge-jawi').textContent = `Tertinggi: ${subjectScores.jawi}`;
             } else {
                 topNav.classList.remove('hidden');
                 if(screenId === 'game') progressContainer.classList.remove('hidden');
             }
+        }
+
+        function enterApp() {
+            showScreen('home');
+            // Init audio context on first user interaction to allow playing later without restrictions
+            playAudio('silent-init'); 
         }
 
         function goHome() {
@@ -333,6 +348,12 @@
 
         function playAudio(type) {
             try {
+                if(type === 'silent-init') {
+                     // Hack untuk benarkan audio dimainkan di Safari/Mobile lepas interaksi pertama
+                     document.getElementById('audio-clap').load();
+                     document.getElementById('audio-wrong').load();
+                     return;
+                }
                 let audio = document.getElementById(type === 'clap' ? 'audio-clap' : 'audio-wrong');
                 audio.currentTime = 0;
                 audio.play();
@@ -354,7 +375,6 @@
             setTimeout(() => { container.innerHTML = ''; }, 3000);
         }
 
-        // --- QUESTION GENERATORS ---
         function shuffleArray(array) {
             let curId = array.length;
             while (0 !== curId) {
@@ -371,7 +391,6 @@
             let qs = [];
             let items = shuffleArray([...kamus]);
             
-            // 5 Soalan: Padankan Perkataan (MCQ)
             for(let i=0; i<5; i++) {
                 let item = items[i];
                 let options = [item[langCode]];
@@ -389,7 +408,6 @@
                 });
             }
 
-            // 5 Soalan: Bina Perkataan (Suku Kata)
             for(let i=5; i<10; i++) {
                 let item = items[i];
                 let parts = item[`${langCode}Suku`];
@@ -408,7 +426,6 @@
                 });
             }
 
-            // 5 Soalan: Eja / Isi tempat kosong
             for(let i=10; i<15; i++) {
                 let item = items[i];
                 let word = item[langCode];
@@ -445,7 +462,6 @@
         function generateMathQuestions() {
             let qs = [];
             
-            // 5 Soalan Tambah/Tolak (MCQ)
             for(let i=0; i<5; i++) {
                 let isAdd = Math.random() > 0.5;
                 let a, b, ans;
@@ -469,7 +485,6 @@
                 });
             }
 
-            // 5 Soalan Tambah/Tolak (Input Num)
             for(let i=0; i<5; i++) {
                 let isAdd = Math.random() > 0.5;
                 let a = Math.floor(Math.random() * 10) + 1;
@@ -485,7 +500,6 @@
                 });
             }
 
-            // 5 Soalan Padan Duit (MCQ)
             const money = [
                 { val: 'RM 1', img: '💵 Biru (RM 1)' },
                 { val: 'RM 5', img: '💶 Hijau (RM 5)' },
@@ -505,7 +519,6 @@
             return qs;
         }
 
-        // --- GAME LOGIC ---
         function startSubject(sub) {
             currentSubject = sub;
             score = 0;
@@ -553,10 +566,9 @@
             }
         }
 
-        // --- UI RENDERING ---
         function renderMCQ(q) {
             let grid = document.createElement('div');
-            grid.className = 'grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-3';
+            grid.className = 'grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-3 w-full';
             
             q.options.forEach((opt, idx) => {
                 let btn = document.createElement('button');
@@ -578,12 +590,12 @@
         function renderInput(q) {
             let display = document.createElement('div');
             display.id = 'num-display';
-            display.className = 'w-full bg-white border-4 border-blue-200 rounded-xl md:rounded-2xl p-2 md:p-4 text-3xl md:text-4xl font-bold text-center text-blue-600 shadow-inner mb-2 md:mb-4 h-16 md:h-20 flex items-center justify-center';
+            display.className = 'w-full bg-white border-4 border-blue-200 rounded-xl md:rounded-2xl p-2 md:p-4 text-3xl md:text-4xl font-bold text-center text-blue-600 shadow-inner mb-2 md:mb-4 h-16 md:h-20 flex items-center justify-center mx-auto max-w-[200px] md:max-w-xs';
             display.textContent = '?';
             answerArea.appendChild(display);
 
             let grid = document.createElement('div');
-            grid.className = 'grid grid-cols-3 gap-2';
+            grid.className = 'grid grid-cols-3 gap-2 w-full max-w-[280px] md:max-w-sm mx-auto';
             
             const keys = ['1','2','3','4','5','6','7','8','9','Padam','0'];
             keys.forEach(k => {
@@ -617,7 +629,7 @@
 
         function renderBuild(q) {
             let displayArea = document.createElement('div');
-            displayArea.className = 'flex justify-center gap-2 mb-4 md:mb-6 min-h-[50px] md:min-h-[60px]';
+            displayArea.className = 'flex justify-center gap-2 mb-4 md:mb-6 min-h-[50px] md:min-h-[60px] w-full';
             displayArea.id = 'build-display';
             
             for(let i=0; i<q.partsCount; i++) {
@@ -643,7 +655,7 @@
             answerArea.appendChild(displayArea);
 
             let optGrid = document.createElement('div');
-            optGrid.className = 'flex flex-wrap justify-center gap-2';
+            optGrid.className = 'flex flex-wrap justify-center gap-2 w-full';
             
             q.options.forEach((opt, idx) => {
                 let btn = document.createElement('button');
@@ -681,7 +693,6 @@
             }
         }
 
-        // --- EVALUATION ---
         function submitAnswer() {
             if(!userSelection) return;
             
@@ -742,7 +753,7 @@
             
             if(score > subjectScores[currentSubject]) {
                 subjectScores[currentSubject] = score;
-                saveScoreLocally(); // simpan ke peranti
+                saveScoreLocally(); 
             }
             
             document.getElementById('result-subject').textContent = names[currentSubject];
@@ -753,8 +764,9 @@
             playAudio('clap');
         }
 
+        // Tunjukkan skrin Splash semasa aplikasi dimuatkan
         window.onload = function() {
-            showScreen('home');
+            showScreen('splash');
         }
 
     </script>
