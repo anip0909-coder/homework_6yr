@@ -12,8 +12,8 @@
     
     <link rel="manifest" href="manifest.json">
     
-    <link rel="icon" type="image/png" href="image_35eaa8.png">
-    <link rel="apple-touch-icon" href="image_35eaa8.png">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🎓</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🎓</text></svg>">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
@@ -76,14 +76,13 @@
 
         /* Gaya untuk skrin pengenalan (Splash Screen) */
         #screen-splash {
-            background-color: #ffdf00; /* Warna kuning sepadan dengan imej */
             background-image: url('image_35eaa8.png');
-            background-size: contain; /* Memastikan keseluruhan imej kelihatan */
-            background-position: center 15%;
+            background-size: cover;
+            background-position: center;
             background-repeat: no-repeat;
         }
         .splash-overlay {
-            background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(240,253,250,0.8) 60%, rgba(240,253,250,1) 100%);
+            background: linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.8) 70%, rgba(255,255,255,1) 100%);
         }
     </style>
 </head>
@@ -127,11 +126,10 @@
 
         <section id="screen-splash" class="active absolute inset-0 z-40 flex flex-col items-center justify-end pb-12 md:pb-20">
             <div class="splash-overlay absolute inset-0 z-0"></div>
-            <div class="z-10 flex flex-col items-center pop-in px-6 text-center w-full max-w-md mx-auto mb-4 md:mb-8">
-                <button onclick="enterApp()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-2xl md:text-3xl py-5 rounded-[2rem] shadow-2xl border-b-8 border-blue-800 btn-bounce animate-pulse">
+            <div class="z-10 flex flex-col items-center pop-in px-4 text-center w-full max-w-md mx-auto">
+                <button onclick="enterApp()" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-extrabold text-2xl md:text-3xl py-4 md:py-5 rounded-full shadow-2xl border-b-8 border-blue-700 btn-bounce mt-4 animate-pulse">
                     MULA BERMAIN 🚀
                 </button>
-                <p class="mt-4 text-slate-600 font-bold text-sm bg-white/50 px-4 py-1 rounded-full">Pendidikan Awal Kanak-Kanak 6 Tahun</p>
             </div>
         </section>
 
