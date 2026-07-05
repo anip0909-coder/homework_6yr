@@ -80,7 +80,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen text-slate-800 flex flex-col relative overflow-x-hidden select-none">
+<body class="h-[100dvh] text-slate-800 flex flex-col relative overflow-hidden select-none">
 
     <!-- Audio Effects -->
     <audio id="audio-clap" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
@@ -116,92 +116,92 @@
     </nav>
 
     <!-- Progress Bar -->
-    <div id="progress-container" class="hidden w-full h-2 bg-slate-200">
+    <div id="progress-container" class="hidden w-full h-2 bg-slate-200 shrink-0">
         <div id="progress-bar" class="h-full bg-green-500 transition-all duration-300" style="width: 0%"></div>
     </div>
 
-    <main class="flex-1 flex flex-col p-4 w-full max-w-4xl mx-auto relative justify-center">
+    <main class="flex-1 overflow-y-auto flex flex-col p-3 md:p-4 w-full max-w-4xl mx-auto relative justify-center">
 
         <!-- SCREEN: HOME -->
-        <section id="screen-home" class="active flex-1 flex flex-col items-center justify-center py-6">
-            <div class="text-center mb-8">
-                <h1 class="text-5xl font-extrabold text-blue-600 mb-2 drop-shadow-sm">Pintar Cilik</h1>
-                <p class="text-xl text-slate-500 font-semibold">Mari belajar sambil bermain!</p>
+        <section id="screen-home" class="active flex-1 flex flex-col items-center justify-center py-4 md:py-6">
+            <div class="text-center mb-6 md:mb-8">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-blue-600 mb-1 md:mb-2 drop-shadow-sm">Pintar Cilik</h1>
+                <p class="text-lg md:text-xl text-slate-500 font-semibold">Mari belajar sambil bermain!</p>
             </div>
 
-            <div class="grid grid-cols-2 gap-4 md:gap-8 w-full max-w-2xl px-2">
-                <button onclick="startSubject('bm')" class="bg-bm card-shadow rounded-3xl p-6 flex flex-col items-center justify-center gap-4 border-2 btn-bounce">
-                    <div class="text-5xl bg-white w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-inner">📖</div>
-                    <h2 class="text-lg md:text-2xl font-bold">Bahasa Melayu</h2>
-                    <div id="badge-bm" class="text-xs md:text-sm font-semibold bg-white/60 px-3 py-1 rounded-full text-slate-700">Markah Tertinggi: 0</div>
+            <div class="grid grid-cols-2 gap-3 md:gap-8 w-full max-w-2xl px-1 md:px-2">
+                <button onclick="startSubject('bm')" class="bg-bm card-shadow rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-4 border-2 btn-bounce">
+                    <div class="text-4xl md:text-5xl bg-white w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-inner">📖</div>
+                    <h2 class="text-base md:text-2xl font-bold">Bahasa Melayu</h2>
+                    <div id="badge-bm" class="text-[10px] md:text-sm font-semibold bg-white/60 px-2 py-1 md:px-3 rounded-full text-slate-700">Markah Tertinggi: 0</div>
                 </button>
 
-                <button onclick="startSubject('math')" class="bg-math card-shadow rounded-3xl p-6 flex flex-col items-center justify-center gap-4 border-2 btn-bounce">
-                    <div class="text-5xl bg-white w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-inner">🔢</div>
-                    <h2 class="text-lg md:text-2xl font-bold">Matematik</h2>
-                    <div id="badge-math" class="text-xs md:text-sm font-semibold bg-white/60 px-3 py-1 rounded-full text-slate-700">Markah Tertinggi: 0</div>
+                <button onclick="startSubject('math')" class="bg-math card-shadow rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-4 border-2 btn-bounce">
+                    <div class="text-4xl md:text-5xl bg-white w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-inner">🔢</div>
+                    <h2 class="text-base md:text-2xl font-bold">Matematik</h2>
+                    <div id="badge-math" class="text-[10px] md:text-sm font-semibold bg-white/60 px-2 py-1 md:px-3 rounded-full text-slate-700">Markah Tertinggi: 0</div>
                 </button>
 
-                <button onclick="startSubject('bi')" class="bg-bi card-shadow rounded-3xl p-6 flex flex-col items-center justify-center gap-4 border-2 btn-bounce">
-                    <div class="text-5xl bg-white w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-inner">🔤</div>
-                    <h2 class="text-lg md:text-2xl font-bold">English</h2>
-                    <div id="badge-bi" class="text-xs md:text-sm font-semibold bg-white/60 px-3 py-1 rounded-full text-slate-700">Markah Tertinggi: 0</div>
+                <button onclick="startSubject('bi')" class="bg-bi card-shadow rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-4 border-2 btn-bounce">
+                    <div class="text-4xl md:text-5xl bg-white w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-inner">🔤</div>
+                    <h2 class="text-base md:text-2xl font-bold">English</h2>
+                    <div id="badge-bi" class="text-[10px] md:text-sm font-semibold bg-white/60 px-2 py-1 md:px-3 rounded-full text-slate-700">Markah Tertinggi: 0</div>
                 </button>
 
-                <button onclick="startSubject('jawi')" class="bg-jawi card-shadow rounded-3xl p-6 flex flex-col items-center justify-center gap-4 border-2 btn-bounce">
-                    <div class="text-5xl bg-white w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-inner">ي</div>
-                    <h2 class="text-lg md:text-2xl font-bold">Jawi</h2>
-                    <div id="badge-jawi" class="text-xs md:text-sm font-semibold bg-white/60 px-3 py-1 rounded-full text-slate-700">Markah Tertinggi: 0</div>
+                <button onclick="startSubject('jawi')" class="bg-jawi card-shadow rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-4 border-2 btn-bounce">
+                    <div class="text-4xl md:text-5xl bg-white w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-inner">ي</div>
+                    <h2 class="text-base md:text-2xl font-bold">Jawi</h2>
+                    <div id="badge-jawi" class="text-[10px] md:text-sm font-semibold bg-white/60 px-2 py-1 md:px-3 rounded-full text-slate-700">Markah Tertinggi: 0</div>
                 </button>
             </div>
         </section>
 
         <!-- SCREEN: GAMEPLAY -->
-        <section id="screen-game" class="hidden flex-1 flex flex-col items-center py-4 w-full">
-            <div id="question-header" class="text-center mb-4 w-full">
-                <span id="question-counter" class="text-slate-500 font-bold text-lg block mb-1">Soalan 1 / 15</span>
-                <h3 id="question-text" class="text-2xl md:text-3xl font-bold text-slate-700 leading-tight"></h3>
+        <section id="screen-game" class="hidden flex-1 flex flex-col items-center justify-center py-2 w-full min-h-[400px]">
+            <div id="question-header" class="text-center mb-2 md:mb-4 w-full shrink-0">
+                <span id="question-counter" class="text-slate-500 font-bold text-sm md:text-lg block mb-1">Soalan 1 / 15</span>
+                <h3 id="question-text" class="text-xl md:text-3xl font-bold text-slate-700 leading-tight"></h3>
             </div>
 
             <!-- Area Imej/Objek Utama -->
-            <div id="question-image" class="text-7xl md:text-8xl mb-6 bg-white p-4 rounded-3xl shadow-sm border-2 border-slate-100 flex items-center justify-center w-40 h-40">
+            <div id="question-image" class="text-6xl md:text-8xl mb-3 md:mb-6 bg-white p-2 md:p-4 rounded-2xl md:rounded-3xl shadow-sm border-2 border-slate-100 flex items-center justify-center w-28 h-28 md:w-40 md:h-40 shrink-0">
             </div>
 
             <!-- Area Jawapan Dinamik (MCQ / Numpad / Build) -->
-            <div id="answer-area" class="w-full max-w-md">
+            <div id="answer-area" class="w-full max-w-md flex-1 flex flex-col justify-center">
                 <!-- Dijana menggunakan Javascript -->
             </div>
 
             <!-- Butang Semak Jawapan -->
-            <div class="mt-6 w-full max-w-md">
-                <button id="btn-semak" onclick="submitAnswer()" class="hidden w-full bg-blue-500 hover:bg-blue-600 text-white font-bold text-2xl py-4 rounded-2xl shadow-lg border-b-4 border-blue-700 btn-bounce transition-all">
+            <div class="mt-4 w-full max-w-md shrink-0 pb-4">
+                <button id="btn-semak" onclick="submitAnswer()" class="hidden w-full bg-blue-500 hover:bg-blue-600 text-white font-bold text-xl md:text-2xl py-3 md:py-4 rounded-2xl shadow-lg border-b-4 border-blue-700 btn-bounce transition-all">
                     Semak
                 </button>
             </div>
 
             <!-- Overlay Maklum Balas (Feedback) -->
-            <div id="feedback-overlay" class="hidden absolute inset-0 bg-white/95 z-30 flex flex-col items-center justify-center rounded-2xl backdrop-blur-sm p-4 text-center">
-                <div id="feedback-icon" class="text-8xl mb-4"></div>
-                <h2 id="feedback-text" class="text-4xl font-bold mb-2"></h2>
-                <div id="feedback-correct-answer" class="text-xl md:text-2xl font-semibold text-slate-700 mb-8 mt-2 p-4 bg-slate-100 rounded-xl w-full max-w-sm hidden border-2 border-slate-300">
+            <div id="feedback-overlay" class="hidden fixed inset-0 bg-white/95 z-50 flex flex-col items-center justify-center p-4 text-center">
+                <div id="feedback-icon" class="text-7xl md:text-8xl mb-2 md:mb-4"></div>
+                <h2 id="feedback-text" class="text-3xl md:text-4xl font-bold mb-2"></h2>
+                <div id="feedback-correct-answer" class="text-lg md:text-2xl font-semibold text-slate-700 mb-6 mt-2 p-3 md:p-4 bg-slate-100 rounded-xl w-full max-w-sm hidden border-2 border-slate-300">
                     <!-- Ditunjuk jika salah -->
                 </div>
-                <button id="btn-seterusnya" onclick="nextQuestion()" class="bg-green-500 hover:bg-green-600 text-white font-bold text-2xl py-3 px-10 rounded-2xl shadow-lg border-b-4 border-green-700 btn-bounce">
+                <button id="btn-seterusnya" onclick="nextQuestion()" class="bg-green-500 hover:bg-green-600 text-white font-bold text-xl md:text-2xl py-3 px-8 md:px-10 rounded-2xl shadow-lg border-b-4 border-green-700 btn-bounce">
                     Seterusnya ➡️
                 </button>
             </div>
         </section>
 
         <!-- SCREEN: RESULT -->
-        <section id="screen-result" class="hidden flex-1 flex flex-col items-center justify-center py-10">
-            <h2 class="text-4xl font-extrabold text-slate-800 mb-6">Tahniah! 🎉</h2>
-            <div class="bg-white p-8 rounded-3xl card-shadow border-4 border-yellow-400 text-center max-w-md w-full mb-8 pop-in">
-                <p class="text-xl text-slate-500 mb-2 font-bold" id="result-subject">Subjek</p>
-                <div class="text-7xl mb-4">🏆</div>
-                <p class="text-2xl font-bold text-slate-600 mb-2">Markah Anda:</p>
-                <p class="text-6xl font-extrabold text-blue-600" id="final-score">0</p>
+        <section id="screen-result" class="hidden flex-1 flex flex-col items-center justify-center py-6 md:py-10">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4 md:mb-6">Tahniah! 🎉</h2>
+            <div class="bg-white p-6 md:p-8 rounded-3xl card-shadow border-4 border-yellow-400 text-center max-w-xs md:max-w-md w-full mb-6 md:mb-8 pop-in">
+                <p class="text-lg md:text-xl text-slate-500 mb-2 font-bold" id="result-subject">Subjek</p>
+                <div class="text-6xl md:text-7xl mb-4">🏆</div>
+                <p class="text-xl md:text-2xl font-bold text-slate-600 mb-2">Markah Anda:</p>
+                <p class="text-5xl md:text-6xl font-extrabold text-blue-600" id="final-score">0</p>
             </div>
-            <button onclick="goHome()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold text-2xl py-4 px-12 rounded-full shadow-lg border-b-4 border-blue-700 btn-bounce">
+            <button onclick="goHome()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold text-xl md:text-2xl py-3 md:py-4 px-10 md:px-12 rounded-full shadow-lg border-b-4 border-blue-700 btn-bounce">
                 Main Lagi
             </button>
         </section>
@@ -556,11 +556,11 @@
         // --- UI RENDERING ---
         function renderMCQ(q) {
             let grid = document.createElement('div');
-            grid.className = 'grid grid-cols-1 md:grid-cols-3 gap-3';
+            grid.className = 'grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-3';
             
             q.options.forEach((opt, idx) => {
                 let btn = document.createElement('button');
-                btn.className = `bg-white border-2 border-slate-200 rounded-2xl p-4 text-xl md:text-2xl font-bold text-slate-700 shadow-sm transition-all btn-bounce ${q.isJawi ? 'jawi-text text-3xl' : ''}`;
+                btn.className = `bg-white border-2 border-slate-200 rounded-xl md:rounded-2xl p-3 md:p-4 text-lg md:text-2xl font-bold text-slate-700 shadow-sm transition-all btn-bounce ${q.isJawi ? 'jawi-text text-2xl md:text-3xl' : ''}`;
                 btn.textContent = opt;
                 btn.onclick = () => {
                     Array.from(grid.children).forEach(c => {
@@ -578,7 +578,7 @@
         function renderInput(q) {
             let display = document.createElement('div');
             display.id = 'num-display';
-            display.className = 'w-full bg-white border-4 border-blue-200 rounded-2xl p-4 text-4xl font-bold text-center text-blue-600 shadow-inner mb-4 h-20 flex items-center justify-center';
+            display.className = 'w-full bg-white border-4 border-blue-200 rounded-xl md:rounded-2xl p-2 md:p-4 text-3xl md:text-4xl font-bold text-center text-blue-600 shadow-inner mb-2 md:mb-4 h-16 md:h-20 flex items-center justify-center';
             display.textContent = '?';
             answerArea.appendChild(display);
 
@@ -588,9 +588,9 @@
             const keys = ['1','2','3','4','5','6','7','8','9','Padam','0'];
             keys.forEach(k => {
                 let btn = document.createElement('button');
-                btn.className = 'bg-white border-2 border-slate-200 rounded-2xl p-3 text-xl font-bold text-slate-700 shadow-sm btn-bounce';
+                btn.className = 'bg-white border-2 border-slate-200 rounded-xl md:rounded-2xl p-2 md:p-3 text-lg md:text-xl font-bold text-slate-700 shadow-sm btn-bounce';
                 if(k === 'Padam') {
-                    btn.className += ' text-red-500 text-sm';
+                    btn.className += ' text-red-500 text-sm md:text-base';
                     btn.textContent = 'Padam';
                 } else {
                     btn.textContent = k;
@@ -617,12 +617,12 @@
 
         function renderBuild(q) {
             let displayArea = document.createElement('div');
-            displayArea.className = 'flex justify-center gap-2 mb-6 min-h-[60px]';
+            displayArea.className = 'flex justify-center gap-2 mb-4 md:mb-6 min-h-[50px] md:min-h-[60px]';
             displayArea.id = 'build-display';
             
             for(let i=0; i<q.partsCount; i++) {
                 let slot = document.createElement('div');
-                slot.className = 'w-14 h-14 md:w-16 md:h-16 border-4 border-dashed border-slate-300 rounded-xl flex items-center justify-center text-xl md:text-2xl font-bold text-blue-600 bg-white/50 cursor-pointer';
+                slot.className = 'w-12 h-12 md:w-16 md:h-16 border-4 border-dashed border-slate-300 rounded-xl flex items-center justify-center text-lg md:text-2xl font-bold text-blue-600 bg-white/50 cursor-pointer';
                 if(q.isJawi) slot.classList.add('jawi-text');
                 
                 slot.onclick = () => {
@@ -648,7 +648,7 @@
             q.options.forEach((opt, idx) => {
                 let btn = document.createElement('button');
                 btn.id = `opt-btn-${opt}`;
-                btn.className = `bg-white border-2 border-slate-200 rounded-2xl p-3 text-lg md:text-xl font-bold text-slate-700 shadow-sm transition-all btn-bounce ${q.isJawi ? 'jawi-text text-3xl' : ''}`;
+                btn.className = `bg-white border-2 border-slate-200 rounded-xl md:rounded-2xl p-2 md:p-3 text-base md:text-xl font-bold text-slate-700 shadow-sm transition-all btn-bounce ${q.isJawi ? 'jawi-text text-2xl md:text-3xl' : ''}`;
                 btn.textContent = opt;
                 
                 btn.onclick = () => {
@@ -707,8 +707,8 @@
                 
                 feedbackIcon.textContent = '🌟';
                 feedbackText.textContent = 'Pandai!';
-                feedbackText.className = 'text-5xl font-bold text-green-500 pop-in mb-6';
-                feedbackOverlay.className = 'absolute inset-0 bg-white/95 z-30 flex flex-col items-center justify-center rounded-2xl backdrop-blur-sm p-4 text-center';
+                feedbackText.className = 'text-4xl md:text-5xl font-bold text-green-500 pop-in mb-4 md:mb-6';
+                feedbackOverlay.className = 'fixed inset-0 bg-white/95 z-50 flex flex-col items-center justify-center backdrop-blur-sm p-4 text-center';
                 feedbackCorrectAnswer.classList.add('hidden');
                 
                 playAudio('clap');
@@ -716,11 +716,11 @@
             } else {
                 feedbackIcon.textContent = '❌';
                 feedbackText.textContent = 'Cuba Lagi';
-                feedbackText.className = 'text-4xl font-bold text-red-500 mb-2';
-                feedbackOverlay.className = 'absolute inset-0 bg-red-50/95 z-30 flex flex-col items-center justify-center rounded-2xl backdrop-blur-sm p-4 text-center shake-wrong';
+                feedbackText.className = 'text-3xl md:text-4xl font-bold text-red-500 mb-2';
+                feedbackOverlay.className = 'fixed inset-0 bg-red-50/95 z-50 flex flex-col items-center justify-center backdrop-blur-sm p-4 text-center shake-wrong';
                 
                 feedbackCorrectAnswer.classList.remove('hidden');
-                feedbackCorrectAnswer.innerHTML = `Jawapan Sebenar:<br><span class="text-3xl font-bold text-blue-600 block mt-2 ${isJawi ? 'jawi-text text-5xl' : ''}">${correctAnswerText}</span>`;
+                feedbackCorrectAnswer.innerHTML = `Jawapan Sebenar:<br><span class="text-2xl md:text-3xl font-bold text-blue-600 block mt-2 ${isJawi ? 'jawi-text text-4xl md:text-5xl' : ''}">${correctAnswerText}</span>`;
                 
                 playAudio('wrong');
             }
